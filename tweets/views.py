@@ -4,7 +4,5 @@ from .analysis import analysis
 
 
 def tweet_list(request):
-    context = {}
-    context['elias'] = 'gato'
-    analysis()
+    context = analysis()
     return render(request, 'tweets/index.html', context)

@@ -1,14 +1,42 @@
 {% extends "base.html" %}
 {% block content %}
-<project class="media content-section">
+<div class="content-section">
     <div class="project-title">
         <h3>Wordcloud for "User"'s tweets</h3>
     </div>
     <div class="project-content" align="middle">
         <img src="/media/wordcloud.png" height="400" width="400">
     </div>
-    <p>ASDASD</p>
-    <h1>ASDIJASODSAIDO</h1>
-</project>
+    <div class="container">
+        <div class="row">
+            <h2>User's most liked Tweets</h2>
+        </div>
+        <ol>
+            {% for tweet in most_liked_tweets %}
+            <li><strong><a href="{{ tweet }}" target="_blank">Tweet Text</a></strong></li>
+            <hr>
+            {% endfor %}
+        </ol>
+        <div>
+            <h2>User's most Retweeted Tweets</h2>
+        </div>
+        <ol>
+            {% for tweet in most_retweeted_tweets %}
+            <li><strong><a href="{{ tweet }}" target="_blank">Tweet Text</a></strong></li>
+            <hr>
+            {% endfor %}
+        </ol>
+
+        <div>
+            <h2>User's Top Words</h2>
+        </div>
+        <ol>
+            {% for word in top_words %}
+            <li><strong>{{ word }}</a></strong></li>
+            <hr>
+            {% endfor %}
+        </ol>
+    </div>
+</div>
 
 {% endblock content %}

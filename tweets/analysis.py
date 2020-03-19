@@ -66,8 +66,9 @@ def save_user_tweets(api, username, tweet_count=300):
 
 def tweets_dataframe(username, api, tweet_count):
     dataframe = pd.DataFrame()
-    for status in tweepy.Cursor(api.user_timeline, screen_name=username, count=tweet_count, tweet_mode="extended",
-                                include_rts=False).items():
+    cursor = tweepy.Cursor(api.user_timeline, screen_name=username, count=tweet_count, tweet_mode="extended",
+                           include_rts=False).items(50)
+    for status in cursor:
         tweet = json.dumps(status._json)
         tweet = json_normalize(json.loads(tweet))
         df_item = pd.DataFrame(tweet)
@@ -114,13 +115,20 @@ class TweetAnalysis:
 
     # Generating the wordcloud
     @staticmethod
-    def generate_tweet_wordcloud(text):
-        module_dir = os.path.dirname(__file__)  # get current directory
-        file_path = os.path.join(module_dir, 'wordcloud/twitter11.png')
-        img = Image.open(file_path)
-        hcmask = np.array(img)
-        wc = WordCloud(width=6500, height=4300, background_color='black', mask=hcmask, max_words=300, max_font_size=100,
-                       stopwords=STOPWORDS)
+    def generate_tweet_wordcloud(text, mask=None):
+        if mask:
+            module_dir = os.path.dirname(__file__)  # get current directory
+            wc_mask = "wordcloud/" + mask
+            file_path = os.path.join(module_dir, wc_mask)
+            img = Image.open(file_path)
+            hcmask = np.array(img)
+            wc = WordCloud(width=1920, height=1080, background_color='black',
+                           mask=hcmask, max_words=300, max_font_size=100,
+                           stopwords=STOPWORDS)
+        else:
+            wc = WordCloud(width=6500, height=4300, background_color='black', max_words=300,
+                           max_font_size=100,
+                           stopwords=STOPWORDS)
         wc.generate(text)
         # plt.figure(figsize=[60,40])
         # plt.title('@' + name_search, fontsize=70)
@@ -130,8 +138,8 @@ class TweetAnalysis:
         return wc
 
     # saves the wordcloud in the project (tweets/images/wordcloud.png)
-    def save_tweet_wordcloud(self, text, filename):
-        wc = self.generate_tweet_wordcloud(text)
+    def save_tweet_wordcloud(self, text, filename, mask=None):
+        wc = self.generate_tweet_wordcloud(text, mask)
         module_dir = os.path.dirname(__file__)  # get current directory
         wc_path = os.path.join(module_dir, filename)
         print(wc_path)
@@ -197,12 +205,12 @@ def analysis():
 
     # TWEETS A DATAFRAME
     name_search = 'elonmusk'
-    df = tweets_dataframe(name_search, api, 300)
+    df = tweets_dataframe(name_search, api, 100)
     df_text = df['full_text']
     # Lowercase tweet list, with no simbols
     tweet_list = df_text.apply(cleanup)
     tweet_analysis = TweetAnalysis(df, tweet_list)
-    tweet_analysis.save_tweet_wordcloud(tweet_analysis.text, 'images\wordcloud.png')
+    tweet_analysis.save_tweet_wordcloud(tweet_analysis.text, 'images/wordcloud.jpg', 'twitter11.png')
     analysis_context = {}
     analysis_context['most_liked_tweets'] = tweet_analysis.get_most_liked_tweets(5)
     analysis_context['most_retweeted_tweets'] = tweet_analysis.get_most_retweeted_tweets(5)
@@ -219,10 +227,15 @@ def analysis():
     lda_z, lda_model = tweet_analysis.lda_model(tweet_bow, topic_amount)
 
     n_top_words = 40
+    # I get the user's most used words
+    analysis_context['top_words'] = tweet_analysis.get_top_words(lda_model, tf_feature_names, n_top_words)
+
     # imprimo las top Words
 
     analysis_context['topic_words'] = tweet_analysis.get_top_words(lda_model, tf_feature_names, n_top_words)
 
     lda_topic_list = lda_topics_wc(lda_model, tf_feature_names)
     for i, item in enumerate(lda_topic_list):
-        tweet_analysis.save_tweet_wordcloud(item, 'images/topic{}.png'.format(i))
+        tweet_analysis.save_tweet_wordcloud(item, 'images/topic{}.jpg'.format(i))
+
+    return analysis_context
