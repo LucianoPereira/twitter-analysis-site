@@ -4,12 +4,16 @@
     <div class="project-title">
         <h3>Wordcloud for "User"'s tweets</h3>
     </div>
-    <div class="project-content" align="middle">
+    <div class=" row" align="middle">
+      <div class="col mb-4" >
         <img src="/media/wordcloud.png" height="400" width="400">
+      </div>
     </div>
     <div class="container">
         <div class="row">
+          <div class="col-md-12">
             <h2>User's most liked Tweets</h2>
+          </div>
         </div>
         <ol>
             {% for tweet in most_liked_tweets %}
@@ -17,16 +21,21 @@
             <hr>
             {% endfor %}
         </ol>
-        <div>
+        <div class="row">
+          <div class="col-md-12">
             <h2>User's most Retweeted Tweets</h2>
+          </div>
         </div>
-        <ol>
-            {% for tweet in most_retweeted_tweets %}
-            <li><strong><a href="{{ tweet }}" target="_blank">Tweet Text</a></strong></li>
-            <hr>
-            {% endfor %}
-        </ol>
-
+        <div class="row">
+          <div class="col-md-12">
+          <ol>
+              {% for tweet in most_retweeted_tweets %}
+              <li><strong><a href="{{ tweet }}" target="_blank">Tweet Text</a></strong></li>
+              <hr>
+              {% endfor %}
+          </ol>
+          </div>
+        </div>
         <div>
             <h2>User's Top Words</h2>
         </div>
