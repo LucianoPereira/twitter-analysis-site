@@ -196,16 +196,25 @@ def lda_topics_wc(lda_model, tf_feature_names):
     return topic_word_list
 
 
-def analysis():
+def authenticate_api():
     # Authenticating the Application
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
-
     api = tweepy.API(auth)
+    return api
 
+
+def get_users(username):
+    api = authenticate_api()
+    users = api.search_users("elias")
+    return users[:5]
+
+
+def analysis(username):
+    api = authenticate_api()
     # TWEETS A DATAFRAME
-    name_search = 'elonmusk'
-    df = tweets_dataframe(name_search, api, 100)
+    # name_search = 'elonmusk'
+    df = tweets_dataframe(username, api, 200)
     df_text = df['full_text']
     # Lowercase tweet list, with no simbols
     tweet_list = df_text.apply(cleanup)
