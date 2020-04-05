@@ -34,11 +34,18 @@
                 </div>
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
-                  <form class="form-inline my-2 my-lg-0" action="{% url 'tweets:search' %}" method="post">
-                      {% csrf_token %}
-                      <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit" value="Search">Search</button>
-                  </form>
+                    <form class="form-inline my-2 my-lg-0" action="{% url 'tweets:search' %}" method="post">
+                        {% csrf_token %}
+                        <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search"
+                               aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="wordcloud" type="submit" value="Search">Word Cloud
+                        </button>
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="tweets_info" type="submit" value="Search">Search-info
+                        </button>
+                        <button class="btn btn-outline-success my-2 my-sm-0" name="coming_soon" type="submit" value="Search">Coming Soon
+                        </button>
+
+                    </form>
                 </div>
             </div>
         </div>
@@ -48,11 +55,11 @@
     <div class="row">
         <div class="col-md-8">
             {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-{{message.tags}}">
-                        {{message}}
-                    </div>
-                {% endfor %}
+            {% for message in messages %}
+            <div class="alert alert-{{message.tags}}">
+                {{message}}
+            </div>
+            {% endfor %}
             {% endif %}
             {% block content %}{% endblock %}
         </div>

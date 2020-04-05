@@ -22,7 +22,13 @@ def index_view(request):
 
 
 def search_view(request):
-    return HttpResponseRedirect(reverse_lazy('tweets:tweets-wordcloud', kwargs={'search': request.POST['search']}))
+
+    if 'wordcloud' in request.POST:
+        return HttpResponseRedirect(reverse_lazy('tweets:tweets-wordcloud', kwargs={'search': request.POST['search']}))
+    elif 'tweets_info' in request.POST:
+        return HttpResponseRedirect(reverse_lazy('tweets:tweets-info', kwargs={'search': request.POST['search']}))
+    else:
+        return HttpResponseRedirect(reverse_lazy('tweets:tweets-index', kwargs={'search': request.POST['search']}))
 
 
 def wordcloud_view(request, search):
@@ -39,6 +45,7 @@ def wordcloud_view(request, search):
 def info_view(request, search):
     api = authenticate_api()
     df = tweets_dataframe(search, api, 200)
+    print(df)
     name = df['user.name']
     screen_name = df['user.screen_name']
     most_liked_tweets = get_most_liked_tweets(df, 5)
