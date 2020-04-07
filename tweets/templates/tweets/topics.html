@@ -1,3 +1,4 @@
+{% extends 'base.html' %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,12 +10,21 @@
 <div class="content-section">
     <div class="row justify-content-center">
         <div class="col-md-12 text-center">
-            <h2>Wordcloud for "User"'s tweets</h2>
+            <h2>Wordcloud for {{ name }}'s tweets</h2>
+            <hr>
         </div>
     </div>
     <div class=" row" align="middle">
         <div class="col mb-3">
-            <img class="img-fluid" src="/media/wordcloud.png" height="400" width="400">
+            {% load static %}
+            {% for route in routes %}
+            <ul>
+                <li>
+                    <h4>Topic {{ forloop.counter }}</h4>
+                    <img class="img-fluid" src="{% static route %}">
+                </li>
+            </ul>
+            {% endfor %}
         </div>
     </div>
     {% endblock %}

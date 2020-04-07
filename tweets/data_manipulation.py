@@ -3,6 +3,7 @@ import json
 import pandas as pd
 from pandas.io.json import json_normalize
 from .ml_models import LemmaCountVectorizer
+from django.http import Http404
 # WORDCLOUD
 import numpy as np
 from PIL import Image
@@ -12,19 +13,21 @@ from wordcloud import WordCloud, STOPWORDS
 # Cleanup
 import re
 
-
 import os
 
 
 def tweets_dataframe(username, api, tweet_count):
     dataframe = pd.DataFrame()
-    cursor = tweepy.Cursor(api.user_timeline, screen_name=username, count=tweet_count, tweet_mode="extended",
-                           include_rts=False).items(300)
-    for status in cursor:
-        tweet = json.dumps(status._json)
-        tweet = json_normalize(json.loads(tweet))
-        df_item = pd.DataFrame(tweet)
-        dataframe = dataframe.append(df_item, ignore_index=True, sort=False)
+    try:
+        cursor = tweepy.Cursor(api.user_timeline, screen_name=username, count=tweet_count, tweet_mode="extended",
+                               include_rts=False).items(300)
+        for status in cursor:
+            tweet = json.dumps(status._json)
+            tweet = json_normalize(json.loads(tweet))
+            df_item = pd.DataFrame(tweet)
+            dataframe = dataframe.append(df_item, ignore_index=True, sort=False)
+    except tweepy.TweepError:
+        raise Http404
     return dataframe
 
 
@@ -44,10 +47,10 @@ def cleanup(sentence):
     return sentence
 
 
-# Creating word list, containing every word from every tweet
-def prepare_wordcloud_data(self):
+# Creating a string, containing every word from every tweet
+def prepare_wordcloud_data(tweet_list):
     wc_word_list = []
-    for tweets in self.tweet_list:
+    for tweets in tweet_list:
         for word in tweets.split():
             wc_word_list.append(word)
     wc_word_string = " ".join(wc_word_list)
