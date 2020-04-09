@@ -33,7 +33,9 @@
                 <div class="navbar-nav">
                     <form class="form-inline my-2 my-lg-0" action="{% url 'tweets:search' %}" method="post">
                         {% csrf_token %}
-                        <input class="form-control mr-sm-2" name="search" type="search" placeholder="Search"
+                        <input class="form-control mr-sm-2" name="search_topic" type="search" placeholder="Search Topic"
+                               aria-label="Search">
+                        <input class="form-control mr-sm-2" name="search_user" type="search" placeholder="Search User"
                                aria-label="Search">
                         <button class="btn btn-outline-success my-2 my-sm-0" name="wordcloud" type="submit" value="Search">Word Cloud
                         </button>

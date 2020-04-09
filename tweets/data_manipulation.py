@@ -16,11 +16,26 @@ import re
 import os
 
 
-def tweets_dataframe(username, api, tweet_count):
+def user_tweets_to_dataframe(username, api, tweet_count):
     dataframe = pd.DataFrame()
     try:
         cursor = tweepy.Cursor(api.user_timeline, screen_name=username, count=tweet_count, tweet_mode="extended",
-                               include_rts=False).items(300)
+                               include_rts=False).items(tweet_count)
+        for status in cursor:
+            tweet = json.dumps(status._json)
+            tweet = json_normalize(json.loads(tweet))
+            df_item = pd.DataFrame(tweet)
+            dataframe = dataframe.append(df_item, ignore_index=True, sort=False)
+    except tweepy.TweepError:
+        raise Http404
+    return dataframe
+
+
+def topic_tweets_to_dataframe(topic, api, tweet_count):
+    dataframe = pd.DataFrame()
+    try:
+        cursor = tweepy.Cursor(api.search, q=topic, result_type="mixed", count=tweet_count, tweet_mode="extended",
+                               include_rts=False).items(tweet_count)
         for status in cursor:
             tweet = json.dumps(status._json)
             tweet = json_normalize(json.loads(tweet))

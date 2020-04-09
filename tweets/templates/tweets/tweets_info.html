@@ -10,13 +10,13 @@
 <div style="display:flex; justify-content: flex-start; margin: 20px;">
     <div style="display:flex; justify-content: flex-start; margin: 20px;">
         <div class="card mb-2">
-            <h2 class="card-header">User's most liked Tweets</h2>
+            <h2 class="card-header">Most Liked Tweets</h2>
             <div class="card-body">
                 <ul>
                     {% for tweet in most_liked_tweets %}
                     <li>
                         <blockquote class="twitter-tweet"><p lang="en" dir="ltr"></p>&mdash; {{ name }}
-                            (@{{screen_name}}) <a href="{{ tweet }}">March 29, 2020</a></blockquote>
+                            (@{{name}}) <a href="{{ tweet }}">March 29, 2020</a></blockquote>
                         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                     </li>
                     <hr>
@@ -27,13 +27,13 @@
 
 
         <div class="card mb-2">
-            <h2 class="card-header">User's most Retweeted Tweets</h2>
+            <h2 class="card-header">Most Retweeted Tweets</h2>
             <div class="card-body">
                 <ul>
                     {% for tweet in most_retweeted_tweets %}
                     <li>
                         <blockquote class="twitter-tweet"><p lang="en" dir="ltr"></p>&mdash; {{ name }}
-                            (@{{screen_name}}) <a href="{{ tweet }}">March 29, 2020</a></blockquote>
+                            (@{{name}}) <a href="{{ tweet }}">March 29, 2020</a></blockquote>
                         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                     </li>
                     <hr>
@@ -43,17 +43,20 @@
         </div>
     </div>
 </div>
-    <div class="card mb-2">
-        <h3 class="card-header">Most mentioned users</h3>
-        <div class="card-body">
-            <ul>
-                {% for key, value in most_mentioned_dict.items %}
-                <li><strong>{{ key }} Mentioned {{ value }} times.</a></strong></li>
-                <hr>
-                {% endfor %}
-            </ul>
-        </div>
+<div class="card mb-2">
+    <h3 class="card-header">Most mentioned users</h3>
+    <div class="card-body">
+        <ul>
+            {% for key, value in most_mentioned_dict.items %}
+                {% if forloop.counter < 15 %}
+                    <li><strong>{{ key }} Mentioned {{ value }} times.</a></strong></li>
+                    <hr>
+                {% endif %}
+            {% endfor %}
+
+        </ul>
     </div>
+</div>
 </body>
 </html>
 {% endblock content %}

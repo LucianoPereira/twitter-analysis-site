@@ -10,8 +10,8 @@ app_name = 'tweets'
 urlpatterns = [
     path('', index_view, name='tweets-index'),
     path('search/', search_view, name='search'),
-    path('<str:search>/tweets_wordcloud', wordcloud_view,  name='tweets-wordcloud'),
-    path('<str:search>/tweets_info', info_view, name='tweets-info'),
-    path('<str:search>/topics', topics_view, name='tweets-topics'),
+    path('<str:mode>/<str:search>/tweets_wordcloud', wordcloud_view,  name='tweets-wordcloud'),
+    path('<str:mode>/<str:search>/tweets_info', info_view, name='tweets-info'),
+    path('<str:mode>/<str:search>/topics', topics_view, name='tweets-topics'),
 
 ]
